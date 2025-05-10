@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notify</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://kit.fontawesome.com/2847e14671.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div class="app-container" id="appContainer">
+        <!-- Sidebar for Categories -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h3>Categories</h3>
+                <button id="manageCategoriesBtn" class="manage-btn" title="Manage Categories">
+                    <i class="fa-solid fa-gear"></i>
+                </button>
+            </div>
+            <div class="sidebar-body">
+                <ul id="categoriesList" class="categories-list">
+                    <!-- Categories will be dynamically inserted here -->
+                </ul>
+            </div>
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <div class="user-avatar" id="userAvatar">U</div>
+                    <div class="user-info">
+                        <div class="user-name" id="userName">User</div>
+                        <div class="user-email" id="userEmail">user@example.com</div>
+                    </div>
+                    <button id="logoutBtn" class="logout-btn" title="Logout">
+                        <i class="fa-solid fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="container">
+            <div class="container-head">
+                <h1>Notify</h1>
+                <div class="action-buttons">
+                    <button id="addTaskBtn" class="actionBtn" title="Add Task"><i class="fa-solid fa-plus"></i></button>
+                    <button id="addNoteBtn" class="actionBtn" title="Add Note"><i class="fa-solid fa-note-sticky"></i></button>
+                </div>
+            </div>
+
+            <div class="tab-container">
+                <button class="tab-btn active" data-tab="tasks"><i class="fa-solid fa-tasks"></i> Tasks</button>
+                <button class="tab-btn" data-tab="notes"><i class="fa-solid fa-comment-dots"></i> Notes</button>
+            </div>
+
+            <div class="container-body">
+                <!-- Tasks Tab Content -->
+                <div class="tab-content active" id="tasks-content">
+                    <div class="filter-container">
+                        <button class="filter-btn active" data-filter="all">All</button>
+                        <button class="filter-btn" data-filter="active">Active</button>
+                        <button class="filter-btn" data-filter="completed">Completed</button>
+                    </div>
+                    <h2>Task List</h2>
+                    <ul id="taskList"></ul>
+                </div>
+
+                <!-- Notes Tab Content -->
+                <div class="tab-content" id="notes-content">
+                    <div class="notes-container">
+                        <h2>Notes & Chat Log</h2>
+                        <div id="notesList" class="notes-list"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Task Dialog -->
+    <div class="dialog-overlay" id="taskDialog">
+        <div class="task-dialog">
+            <div class="dialog-header">
+                <h3 id="dialogTitle">Add New Task</h3>
+                <button class="close-dialog" id="closeDialog"><i class="fa-solid fa-times"></i></button>
+            </div>
+            <div class="dialog-body">
+                <form id="taskForm">
+                    <div class="form-group">
+                        <label for="taskTitle">Task Title</label>
+                        <input type="text" id="taskTitle" placeholder="Enter task title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="taskDescription">Description (Optional)</label>
+                        <textarea id="taskDescription" placeholder="Enter task description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="taskDueDate">Due Date (Optional)</label>
+                        <input type="date" id="taskDueDate">
+                    </div>
+                    <div class="form-group category-field hidden" id="taskCategoryField">
+                        <label for="taskCategory">Category</label>
+                        <select id="taskCategory" class="task-select">
+                            <option value="">All Items</option>
+                            <!-- Categories will be dynamically inserted here -->
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="dialog-footer">
+                <button class="cancel-btn" id="cancelTask">Cancel</button>
+                <button class="save-btn" id="saveTask">Save Task</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Note Dialog -->
+    <div class="dialog-overlay" id="noteDialog">
+        <div class="task-dialog">
+            <div class="dialog-header">
+                <h3 id="noteDialogTitle">Add New Note</h3>
+                <button class="close-dialog" id="closeNoteDialog"><i class="fa-solid fa-times"></i></button>
+            </div>
+            <div class="dialog-body">
+                <form id="noteForm">
+                    <div class="form-group">
+                        <label for="noteTitle">Note Title</label>
+                        <input type="text" id="noteTitle" placeholder="Enter note title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="noteContent">Content</label>
+                        <textarea id="noteContent" placeholder="Enter your note content" required></textarea>
+                    </div>
+                    <div class="form-group category-field hidden" id="noteCategoryField">
+                        <label for="noteCategory">Category</label>
+                        <select id="noteCategory" class="task-select">
+                            <option value="">All Items</option>
+                            <!-- Categories will be dynamically inserted here -->
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="dialog-footer">
+                <button class="cancel-btn" id="cancelNote">Cancel</button>
+                <button class="save-btn" id="saveNote">Save Note</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Category Management Dialog -->
+    <div class="dialog-overlay" id="categoryDialog">
+        <div class="task-dialog">
+            <div class="dialog-header">
+                <h3>Manage Categories</h3>
+                <button class="close-dialog" id="closeCategoryDialog"><i class="fa-solid fa-times"></i></button>
+            </div>
+            <div class="dialog-body">
+                <div class="category-management">
+                    <div class="form-group">
+                        <label for="newCategoryName">New Category</label>
+                        <div class="category-add-container">
+                            <input type="text" id="newCategoryName" placeholder="Enter category name">
+                            <button id="addCategoryBtn" class="add-category-btn"><i class="fa-solid fa-plus"></i></button>
+                        </div>
+                    </div>
+                    
+                    <!-- Added Icon Selector -->
+                    <div class="form-group">
+                        <label for="iconSelector">Select an Icon</label>
+                        <div id="iconSelector" class="icon-selector-container">
+                            <!-- Icons will be dynamically inserted here -->
+                        </div>
+                    </div>
+                    
+                    <div class="category-list-container">
+                        <h4>Existing Categories</h4>
+                        <ul id="categoryManagementList" class="category-management-list">
+                            <!-- Categories will be dynamically inserted here -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="dialog-footer">
+                <button class="save-btn" id="saveCategoryChanges">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="index.js"></script>
+    <script src="calendar.js"></script>
+    <script src="categories.js"></script>
+</body>
+</html>

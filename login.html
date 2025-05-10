@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'">
+    <title>Login - Notify</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .login-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        .login-form {
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-title {
+            margin: 0 0 20px 0;
+            color: #2c3e50;
+        }
+
+        .login-subtitle {
+            margin: 0 0 25px 0;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        .form-control {
+            margin-bottom: 15px;
+            width: 100%;
+        }
+
+        .form-control input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .form-control input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+
+        .login-btn {
+            background-color: #b5cfe8;
+            color: #333;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 15px;
+            font-size: 16px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .login-btn:hover {
+            background-color: #8ab5d6;
+        }
+
+        .login-options {
+            margin-top: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+        }
+
+        .login-options a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .login-options a:hover {
+            text-decoration: underline;
+        }
+
+        .register-link {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+
+        .register-link a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .auth-tabs {
+            display: flex;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 10px;
+            background: none;
+            border: none;
+            font-size: 16px;
+            font-family: inherit;
+            font-weight: 500;
+            color: #7f8c8d;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 2px solid #eee;
+        }
+
+        .auth-tab.active {
+            color: #3498db;
+            border-bottom-color: #3498db;
+        }
+
+        .loading-spinner {
+            display: none;
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 3px solid #3498db;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+            margin-top: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .dark-theme .login-form {
+            background-color: #2d3748;
+        }
+
+        .dark-theme .login-title {
+            color: #e0e0e0;
+        }
+
+        .dark-theme .login-subtitle, 
+        .dark-theme .register-link {
+            color: #a0aec0;
+        }
+
+        .dark-theme .form-control input {
+            background-color: #1f1f1f;
+            border-color: #4a5568;
+            color: #e0e0e0;
+        }
+
+        .dark-theme .form-control input:focus {
+            border-color: #48a9e6;
+        }
+
+        .dark-theme .login-btn {
+            background-color: #4a6c8a;
+            color: #e0e0e0;
+        }
+
+        .dark-theme .login-btn:hover {
+            background-color: #3b5b78;
+        }
+
+        .dark-theme .login-options a, 
+        .dark-theme .register-link a {
+            color: #48a9e6;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-form">
+            <h2 class="login-title">Welcome to Notify</h2>
+            <p class="login-subtitle">Sign in to access your tasks and notes</p>
+
+            <div class="auth-tabs">
+                <button class="auth-tab active" id="login-tab">Login</button>
+                <button class="auth-tab" id="register-tab">Register</button>
+            </div>
+
+            <div id="login-form">
+                <div class="form-control">
+                    <input type="email" id="login-email" placeholder="Email" required>
+                </div>
+                <div class="form-control">
+                    <input type="password" id="login-password" placeholder="Password" required>
+                </div>
+                <button class="login-btn" id="login-button">Sign In</button>
+                <div class="login-options">
+                    <a href="#" id="forgot-password">Forgot Password?</a>
+                </div>
+            </div>
+
+            <div id="register-form" style="display: none;">
+                <div class="form-control">
+                    <input type="text" id="register-name" placeholder="Full Name" required>
+                </div>
+                <div class="form-control">
+                    <input type="email" id="register-email" placeholder="Email" required>
+                </div>
+                <div class="form-control">
+                    <input type="password" id="register-password" placeholder="Password" required>
+                </div>
+                <div class="form-control">
+                    <input type="password" id="register-confirm-password" placeholder="Confirm Password" required>
+                </div>
+                <button class="login-btn" id="register-button">Create Account</button>
+            </div>
+
+            <div class="loading-spinner" id="loading-spinner"></div>
+            <div class="error-message" id="error-message"></div>
+        </div>
+    </div>
+
+    <script src="login.js"></script>
+</body>
+</html>
