@@ -15,6 +15,7 @@ const createWindow = () => {
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
+    icon: path.join(__dirname, '..', 'resources', process.platform === 'win32' ? 'icon.ico' : 'icon.png'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true,
@@ -46,6 +47,7 @@ const createLoginWindow = () => {
   loginWindow = new BrowserWindow({
     width: 1200,
     height: 800,
+    icon: path.join(__dirname, '..', 'resources', process.platform === 'win32' ? 'icon.ico' : 'icon.png'),
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -74,7 +76,9 @@ const createLoginWindow = () => {
 
 // When Electron has finished initialization
 app.whenReady().then(() => {
+  // Remove the default File/Edit/View/Window/Help menu bar
   Menu.setApplicationMenu(null);
+
   createWindow();
 
   // On macOS, re-create a window when dock icon is clicked
