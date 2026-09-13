@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, Menu } = require('electron');
 const path = require('node:path');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -74,6 +74,7 @@ const createLoginWindow = () => {
 
 // When Electron has finished initialization
 app.whenReady().then(() => {
+  Menu.setApplicationMenu(null);
   createWindow();
 
   // On macOS, re-create a window when dock icon is clicked
